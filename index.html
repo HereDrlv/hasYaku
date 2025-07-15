@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <title>MVP Demo</title>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/syanten"></script> <!-- 可能的性能优化点 -->
+<script>
+  // 测试区
+  // let hai1 = [
+  //     [3, 1, 1, 1, 1, 1, 1, 1, 3], //萬子
+  //     [0, 0, 0, 0, 0, 0, 0, 0, 0], //筒子
+  //     [0, 0, 0, 0, 0, 0, 0, 0, 0], //索子
+  //     [0, 0, 0, 0, 0, 0, 0]        //字牌
+  // ]
+  // console.log(syanten.syanten(hai1))     //一般形
+  // console.log(syanten.syanten7(hai))    //七対子形
+  // console.log(syanten.syanten13(hai))   //国士形
+  // console.log(syanten(hai))             //全部形最小値
+
+  //手牌可能枚数: 14,13, 11,10, 8,7, 5,4, 2,1
+
+  // let hai2 = [
+  // [3, 3, 3, 0, 0, 0, 0, 0, 0],
+  // [1, 0, 0, 0, 0, 0, 0, 0, 0],
+  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  // [1, 1, 1, 0, 0, 0, 0]
+  // ]
+  // console.log(syanten.hairi(hai1))
+  // console.log(syanten.hairi(hai2))
+  // let hai4 = [
+  // [1, 1, 1, 1, 0, 0, 0, 0, 0],
+  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  // [0, 0, 0, 0, 0, 0, 0]
+  // ] // 副露后手牌
+  // console.log(syanten.hairi(hai4))
+</script>
+<script src="/japanesemaj.min.js"></script>
+<script>
+  //计算22334455667788万的役种和番、符数。
+  var maj = new JapaneseMaj({
+    dora: [JapaneseMaj.getPai("Wanzi",1)] //这里设置配置相关的参数
+  });
+  var paixing = JapaneseMaj.getPaixingFromString("2m2m3m3m4m4m5m5m6m6m7m7m8m8m"); //将字符串转换成牌型对象
+  var res = maj.getYakuCalculator(paixing); //获取役计算器
+  // if(res) //如果没和牌会返回false
+  // console.log(res.calcYaku(maj.state)); //拿到役、番、符计算结果
+  // 
+  paixing2 = JapaneseMaj.getPaixingFromString("11123456789992m");
+  res2 = maj.getYakuCalculator(paixing2); //获取役计算器
+  // console.log(res2.calcYaku(maj.state)); //拿到役、番、符计算结果
+
+  // paixing3 = JapaneseMaj.getPaixingFromString("1112345678999m");
+  // console.log(maj.calcXiangting(paixing3)); //拿到役、番、符计算结果
+
+  // 例：手牌四索两个、二三萬，摸来的牌是四萬，副露为东风碰，五六七万吃，9筒暗杠，那么手牌的格式应为：
+  // 44s23m4m 111z 567m 99999p
+  paixing3 = JapaneseMaj.getPaixingFromString("44s23m4m 111z 567m 99999p");// 空格分隔副露区
+  res3 = maj.getYakuCalculator(paixing3); //获取役计算器
+  console.log(res3.calcYaku(maj.state)); //拿到役、番、符计算结果
+  // 2m3m4m2m3m4m2p3p4p5p2p 2s3s4s 
+  paixing4 = JapaneseMaj.getPaixingFromString("2m3m4m2m3m4m2p3p4p5p2p 234s"); // 2s3s4s不行
+  res4 = maj.getYakuCalculator(paixing4); //获取役计算器
+  console.log(res4.calcYaku(maj.state)); //拿到役、番
+
+</script>
+<script>
+  //handString to haiArr
+  /*
+    INPUT: hai = [
+      [3, 3, 3, 0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [1, 1, 1, 0, 0, 0, 0]
+    ]
+    OUTPUT: pai = "111222333m1p111z" // 牌的字符串表示
+    牌的顺序：万、筒、索、字
+  */
+</script>
+
+<body>
+  <!-- <h1>输入手牌</h1> -->
+  <!-- <textarea id="handInput" rows="4" cols="50" placeholder="请输入手牌字符串，例如：123456789m123456789p123456789s"></textarea> -->
+
+  
+  <div id="app">
+    <!-- 手牌+副露区展示 -->
+    <div id="handDisplay" class="hai">
+      <!-- 手牌 -->
+      <div>
+        <h2 @click="handCursor = [0,0]">手牌</h2>
+        <template v-for="(tile, index) in hand[0]">
+          <img 
+            :src="getTileImage(tile)" 
+            :alt="tile" 
+            @click="handCursor = [0, index]" 
+            :style="{ border: handCursor[0] === 0 && handCursor[1] === index ? '2px solid grey' : 'none' }"
+          >
+        </template>
+        <br>  
+      </div>
+      <!-- 加入光标显示。逻辑是，如果为空，放一张空牌；如果有，加border吧 -->
+      <!-- 副露 -->
+      <div>
+        <h2 @click="handCursor = [1,0]">副露区</h2>
+        <template v-for="(tile, index) in hand[1]">
+          <img
+            :src="getTileImage(tile)"
+            :alt="tile"
+            @click="handCursor = [1, index]"
+            :style="{ border: handCursor[0] === 1 && handCursor[1] === index ? '2px solid grey' : 'none' }"
+          >
+        </template>
+      </div>
+
+      <button @click="deleteTile(hand)"> 删除 </button>
+      hand: {{hand}}
+      handCursor: {{handCursor}}
+      fulu: {{fulu}}
+    </div>
+    <!-- 麻将输入键盘 -->
+    <div id="keyboard" class="hai">
+      <template v-for="(tiles, typeIndex) in ALL_TILES">
+        <div>
+          <img 
+            v-for="tile in tiles" 
+            :src="getTileImage(tile)" 
+            class="tile" 
+            @click="setTile(tile)"
+          >
+        </div>
+      </template>
+    </div>
+    <button @click="clearHand" >清空</button>
+    <p>handArr: {{handArr}} </p>
+    <button @click="calculateTing()">计算听口与役种</button>
+    <div id="result">
+      <h2>结果</h2>
+      <!-- <p>向听数: <span id="tingCount">0</span></p> -->
+      <p>听口: tingKou:{{tingKou}} 
+        <span id="tingKou" class="hai">
+          <template v-for="(count, tile) in tingKou.wait">
+            <img :src="getTileImage(tile)" :alt="tile">
+            {{count}} 张
+            役种: 
+            <!-- {{yakuList[tile].yaku}} -->
+            <!-- 遍历yakuList[tile]中每一个元素，取出其name -->
+            <template v-for="yaku in yakuList[tile].yaku">
+              <!-- {{yaku.name}}({{yakuList[tile].fu.fu}}符, {{yaku.fan}}番) -->
+              {{yaku.name}} {{yaku.fan}}番
+            </template> 
+            <br>
+          </template>
+        </span>
+      </p>
+    </div>
+
+  </div>
+    
+
+  <style>
+    .hai img{
+      width: 3em;
+      margin: 0.2em;
+      background-image: "/img/Front.png";
+      background-color: #f0f0f0;
+    }
+  </style>
+
+
+<script>
+  const app = Vue.createApp({
+    data() {
+      return {
+        hand: [[],[]], // 手牌数组 hand[0]为手牌，hand[1]为副露区
+        // 手牌格式：['4s','4s','2s','3m','4m']
+        // 副露区格式 ['111z', '567m' , '99999p']
+          // 其实可以正则。
+        handCursor: [0,0], // 手牌光标位置
+        handArr: [ // 似乎叫handMat比较合适
+          [0, 0, 0, 0, 0, 0, 0, 0, 0], //萬子
+          [0, 0, 0, 0, 0, 0, 0, 0, 0], //筒子
+          [0, 0, 0, 0, 0, 0, 0, 0, 0], //索子
+          [0, 0, 0, 0, 0, 0, 0]        //字牌
+        ],
+        fulu: '', // 副露字符串
+        tingKou: {}, // 听口
+        yakuList:{}, // 役种列表
+        ALL_TILES: [
+          ['1m', '2m', '3m', '4m', '5m', '6m', '7m', '8m', '9m'],
+          ['1p', '2p', '3p', '4p', '5p', '6p', '7p', '8p', '9p'],
+          ['1s', '2s', '3s', '4s', '5s', '6s', '7s', '8s', '9s'],
+          ['1z', '2z', '3z', '4z', '5z', '6z', '7z']
+        ]
+      };
+    },
+    methods: {
+      calculateTing() {
+        // TBD - 这里检查一下副露区。查听口只看手牌
+        this.setHandArr(); // 更新手牌数组
+        console.log('手牌矩阵');
+        console.log(this.handArr); // 输出手牌数组
+        try {
+          // const hai = this.parseHandInput(this.handInput);
+          // this.tingCount = syanten.syanten(this.handArr); // 使用 syanten 计算向听数
+          this.tingKou = syanten.hairi(this.handArr); // 获取听口
+          // console.log(this.tingKou); // 输出听口
+          console.log(this.tingKou.wait); // 输出听口
+        } catch (error) {
+          console.error('计算错误:', error);
+          alert('手牌格式错误，请检查输入');
+        }
+        // 到这里都是对的
+        
+        // 将副露区的牌转换成字符串
+        this.fulu = '';
+        // 注意，为了兼容MajCalculator，副露区234s不能写成2s3s4s
+        for (let i = 0; i < this.hand[1].length; i++) {
+          if (this.hand[1][i] === this.hand[1][i + 1]) { // 刻
+            // 连放3/4/5张
+            let j = i;
+            for (; j < this.hand[1].length && this.hand[1][j] === this.hand[1][i]; j++) {
+              // '7z7z7z7z' -> 7777z
+              this.fulu += this.hand[1][j][0]; // 添加到副露区
+              // 但是这样又没有尾巴了
+            }
+            i += j - i - 1; // 跳过已处理的牌
+            this.fulu += this.hand[1][i][1]; // 添加尾巴
+            this.fulu += ' '; // 空格分隔
+          } else { // 顺
+            for (let j = i; j < i + 3; j++)
+              this.fulu += this.hand[1][j][0]; // 添加到副露区字符串
+            this.fulu += this.hand[1][i][1]; // 三个之后添加尾巴
+            i += 2;
+            this.fulu += ' '; // 添加分隔符
+          }
+        }
+        console.log('副露区拼接'); // 输出副露区
+        console.log(this.fulu); // 输出副露区字符串
+        // 并遍历所有听口，计算役种
+        this.yakuList = {}; // 清空役种列表
+        for (const tile in this.tingKou.wait) {
+          // 计算役种
+          // 需要将手牌和听口拼接成完整的牌型字符串
+          // 主要是处理副露区hand[1]
+          // 你反正随便输，我处理。出问题了我只拦截，我不教你怎么输入。
+          // hand[1]: [ "6z", "6z", "6z", "6z", "7z", "7z", "7z", "7z", "4z", "4z", "4z", "4z", "2z", "2z", "2z", "2z" ] 
+          const finalHand = this.hand[0].join("") + tile + " " + this.fulu;
+          console.log(finalHand); // 输出完整手牌
+          // 这里可能拼不对，少了的话圣心语法会报错
+          const pai = JapaneseMaj.getPaixingFromString(finalHand); // 完整14张手牌 手牌 + 听口 + 副露区
+          console.log(pai);
+          const res = maj.getYakuCalculator(pai);
+          // console.log(res.calcYaku(maj.state));
+          this.yakuList[tile] = res.calcYaku(maj.state); // 将结果存入 yakuList
+        }
+        console.log(this.yakuList); // 输出役种列表
+      },
+      clearHand() {
+        this.hand = [[],[]]; // 清空手牌和副露区
+        this.handCursor = [0,0]; // 重置光标
+        this.handArr = [ // 重置手牌数组
+          [0, 0, 0, 0, 0, 0, 0, 0, 0], //萬子
+          [0, 0, 0, 0, 0, 0, 0, 0, 0], //筒子
+          [0, 0, 0, 0, 0, 0, 0, 0, 0], //索子
+          [0, 0, 0, 0, 0, 0, 0]        //字牌
+        ];
+        this.tingKou = {}; // 清空听口
+        this.yakuList = {}; // 清空役种列表
+      },
+      setHandArr() {
+        // hand to handArr
+        // 只看手牌区 this.hand[0]
+        // [ "4m", "4m", "4m", "4m", "4m", "5m", "5m", "5m", "5m", "5m", "5m", "5m", "7m" ]
+        // 还是直接++比较快
+        this.handArr = [
+          [0, 0, 0, 0, 0, 0, 0, 0, 0], //萬子
+          [0, 0, 0, 0, 0, 0, 0, 0, 0], //筒子
+          [0, 0, 0, 0, 0, 0, 0, 0, 0], //索子
+          [0, 0, 0, 0, 0, 0, 0]        //字牌
+        ]
+        for (let i = 0; i < this.hand[0].length; i++) {
+          const tile = this.hand[0][i];
+          if (tile.endsWith('m')) {
+            this.handArr[0][parseInt(tile) - 1]++;
+          } else if (tile.endsWith('p')) {
+            this.handArr[1][parseInt(tile) - 1]++;
+          } else if (tile.endsWith('s')) {
+            this.handArr[2][parseInt(tile) - 1]++;
+          } else if (tile.endsWith('z')) {
+            this.handArr[3][parseInt(tile) - 1]++;
+          }
+        }
+      },
+      getTileImage(tile) {
+        return `/img/${tile}.png`; // 根据牌名返回图片路径
+      },
+      isHandFull() {
+        // return this.hand[0].length + this.hand[1].length  >= 13; // 手牌+副露区已满14张
+        return this.hand[0].length >= 13; // 手牌+副露区已满14张
+        // TBD - 副露区是一组一组的，会影响手牌的长度计算
+      },
+      setTile(tile) {
+        this.hand[this.handCursor[0]][this.handCursor[1]] = tile
+
+        if (this.isHandFull()) return;  // 如果已满13张,光标不移动
+        else this.handCursor[1]++; // 光标向右移动
+        // console.log(`添加牌: ${tile} 到手牌`);
+        // console.log(`当前手牌: ${this.hand}`);
+      },
+      deleteTile() {
+        this.hand[this.handCursor[0]].splice(this.handCursor[1], 1); // 从手牌中删除
+        // if (this.handCursor[1] >= 1) this.handCursor[1]--; // 光标向左移动
+        console.log(`删除牌: ${this.handCursor}，当前手牌: ${this.hand}`);
+      }
+    }
+  });
+
+  app.mount('#app');
+</script>
+
+</body>
+</html>
