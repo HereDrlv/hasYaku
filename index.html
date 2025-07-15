@@ -164,7 +164,7 @@
     .hai img{
       width: 3em;
       margin: 0.2em;
-      background-image: "/img/Front.png";
+      background-image: "./img/Front.png";
       background-color: #f0f0f0;
     }
   </style>
@@ -295,7 +295,7 @@
         }
       },
       getTileImage(tile) {
-        return `/img/${tile}.png`; // 根据牌名返回图片路径
+        return `./img/${tile}.png`; // 根据牌名返回图片路径
       },
       isHandFull() {
         // return this.hand[0].length + this.hand[1].length  >= 13; // 手牌+副露区已满14张
