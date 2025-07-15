@@ -89,7 +89,9 @@
     <!-- 手牌+副露区展示 -->
     <div id="handDisplay" class="hai">
       <!-- 手牌 -->
-      <div>
+      <div 
+        :style="{ backgroundColor: handCursor[0] === 0 ? '#e0e0e0' : 'transparent' }"
+      >
         <h2 @click="handCursor = [0,0]">手牌</h2>
         <template v-for="(tile, index) in hand[0]">
           <img 
@@ -103,8 +105,10 @@
       </div>
       <!-- 加入光标显示。逻辑是，如果为空，放一张空牌；如果有，加border吧 -->
       <!-- 副露 -->
-      <div>
-        <h2 @click="handCursor = [1,0]">副露区</h2>
+      <div
+        :style="{ backgroundColor: handCursor[0] === 1 ? '#e0e0e0' : 'transparent' }"
+      >
+        <h2 @click="handCursor = [1,0]">副露</h2>
         <template v-for="(tile, index) in hand[1]">
           <img
             :src="getTileImage(tile)"
@@ -116,9 +120,9 @@
       </div>
 
       <button @click="deleteTile(hand)"> ⬅️删除 </button>
-      hand: {{hand}}
+      <!-- hand: {{hand}}
       handCursor: {{handCursor}}
-      fulu: {{fulu}}
+      fulu: {{fulu}} -->
     </div>
     <!-- 麻将输入键盘 -->
     <div id="keyboard" class="hai">
@@ -134,26 +138,23 @@
       </template>
     </div>
     <button @click="clearHand" >清空</button>
-    <p>handArr: {{handArr}} </p>
+    <br>
+    <!-- <p>handArr: {{handArr}} </p> -->
     <button @click="calculateTing()">计算听口与役种</button>
     <div id="result">
       <h2>结果</h2>
-      <!-- <p>向听数: <span id="tingCount">0</span></p> -->
-      <p>听口: tingKou:{{tingKou}} 
-        <span id="tingKou" class="hai">
-          <template v-for="(count, tile) in tingKou.wait">
-            <img :src="getTileImage(tile)" :alt="tile">
-            {{count}} 张
-            役种: 
-            <!-- {{yakuList[tile].yaku}} -->
-            <!-- 遍历yakuList[tile]中每一个元素，取出其name -->
-            <template v-for="yaku in yakuList[tile].yaku">
-              <!-- {{yaku.name}}({{yakuList[tile].fu.fu}}符, {{yaku.fan}}番) -->
-              {{yaku.name}} {{yaku.fan}}番
-            </template> 
-            <br>
-          </template>
-        </span>
+      <span id="tingKou" class="hai">
+        <template v-for="(count, tile) in tingKou.wait">
+          <img :src="getTileImage(tile)" :alt="tile">
+          {{count}} 张
+          役种: 
+          <template v-for="yaku in yakuList[tile].yaku">
+            <!-- {{yaku.name}}({{yakuList[tile].fu.fu}}符, {{yaku.fan}}番) -->
+            {{yaku.name}} {{yaku.fan}}番 
+          </template> 
+          <br>
+        </template>
+      </span>
       </p>
     </div>
 
