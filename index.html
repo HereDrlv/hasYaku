@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/syanten"></script> <!-- 可能的性能优化点 -->
 <script>
-  // 测试区
+  // syanten测试区
   // let hai1 = [
   //     [3, 1, 1, 1, 1, 1, 1, 1, 3], //萬子
   //     [0, 0, 0, 0, 0, 0, 0, 0, 0], //筒子
@@ -40,45 +40,32 @@
 </script>
 <script src="./japanesemaj.min.js"></script>
 <script>
+  //japenchmaj测试区
   //计算22334455667788万的役种和番、符数。
-  var maj = new JapaneseMaj({
-    dora: [JapaneseMaj.getPai("Wanzi",1)] //这里设置配置相关的参数
-  });
-  var paixing = JapaneseMaj.getPaixingFromString("2m2m3m3m4m4m5m5m6m6m7m7m8m8m"); //将字符串转换成牌型对象
-  var res = maj.getYakuCalculator(paixing); //获取役计算器
-  // if(res) //如果没和牌会返回false
-  // console.log(res.calcYaku(maj.state)); //拿到役、番、符计算结果
-  // 
-  paixing2 = JapaneseMaj.getPaixingFromString("11123456789992m");
-  res2 = maj.getYakuCalculator(paixing2); //获取役计算器
-  // console.log(res2.calcYaku(maj.state)); //拿到役、番、符计算结果
+  // var maj = new JapaneseMaj({
+  //   dora: [JapaneseMaj.getPai("Wanzi",1)] //这里设置配置相关的参数
+  // });
+  // var paixing = JapaneseMaj.getPaixingFromString("2m2m3m3m4m4m5m5m6m6m7m7m8m8m"); //将字符串转换成牌型对象
+  // var res = maj.getYakuCalculator(paixing); //获取役计算器
+  // // if(res) //如果没和牌会返回false
+  // // console.log(res.calcYaku(maj.state)); //拿到役、番、符计算结果
+  // paixing2 = JapaneseMaj.getPaixingFromString("11123456789992m");
+  // res2 = maj.getYakuCalculator(paixing2); //获取役计算器
+  // // console.log(res2.calcYaku(maj.state)); //拿到役、番、符计算结果
 
-  // paixing3 = JapaneseMaj.getPaixingFromString("1112345678999m");
-  // console.log(maj.calcXiangting(paixing3)); //拿到役、番、符计算结果
+  // // paixing3 = JapaneseMaj.getPaixingFromString("1112345678999m");
+  // // console.log(maj.calcXiangting(paixing3)); //拿到役、番、符计算结果
 
-  // 例：手牌四索两个、二三萬，摸来的牌是四萬，副露为东风碰，五六七万吃，9筒暗杠，那么手牌的格式应为：
-  // 44s23m4m 111z 567m 99999p
-  paixing3 = JapaneseMaj.getPaixingFromString("44s23m4m 111z 567m 99999p");// 空格分隔副露区
-  res3 = maj.getYakuCalculator(paixing3); //获取役计算器
-  console.log(res3.calcYaku(maj.state)); //拿到役、番、符计算结果
-  // 2m3m4m2m3m4m2p3p4p5p2p 2s3s4s 
-  paixing4 = JapaneseMaj.getPaixingFromString("2m3m4m2m3m4m2p3p4p5p2p 234s"); // 2s3s4s不行
-  res4 = maj.getYakuCalculator(paixing4); //获取役计算器
-  console.log(res4.calcYaku(maj.state)); //拿到役、番
+  // // 例：手牌四索两个、二三萬，摸来的牌是四萬，副露为东风碰，五六七万吃，9筒暗杠，那么手牌的格式应为：
+  // // 44s23m4m 111z 567m 99999p
+  // paixing3 = JapaneseMaj.getPaixingFromString("44s23m4m 111z 567m 99999p");// 空格分隔副露区
+  // res3 = maj.getYakuCalculator(paixing3); //获取役计算器
+  // console.log(res3.calcYaku(maj.state)); //拿到役、番、符计算结果
+  // // 2m3m4m2m3m4m2p3p4p5p2p 2s3s4s 
+  // paixing4 = JapaneseMaj.getPaixingFromString("2m3m4m2m3m4m2p3p4p5p2p 234s"); // 2s3s4s不行
+  // res4 = maj.getYakuCalculator(paixing4); //获取役计算器
+  // console.log(res4.calcYaku(maj.state)); //拿到役、番
 
-</script>
-<script>
-  // handString to haiArr
-  /*
-    INPUT: hai = [
-      [3, 3, 3, 0, 0, 0, 0, 0, 0],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [1, 1, 1, 0, 0, 0, 0]
-    ]
-    OUTPUT: pai = "111222333m1p111z" // 牌的字符串表示
-    牌的顺序：万、筒、索、字
-  */
 </script>
 
 <body>
