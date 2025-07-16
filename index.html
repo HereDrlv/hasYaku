@@ -120,10 +120,12 @@
       </div>
 
       <button @click="deleteTile(hand)"> ⬅️删除 </button>
+      <button @click="clearHand" >清空</button>
       <!-- hand: {{hand}}
       handCursor: {{handCursor}}
       fulu: {{fulu}} -->
     </div>
+    
     <!-- 麻将输入键盘 -->
     <div id="keyboard" class="hai">
       <template v-for="(tiles, typeIndex) in ALL_TILES">
@@ -137,27 +139,46 @@
         </div>
       </template>
     </div>
-    <button @click="clearHand" >清空</button>
+
+    <!-- 自风场风设置 -->
+    <!-- 自风东起为0，每加一次就顺时针转90度  -->
+    <div>
+      
+      我坐<button
+        @click="majObjParams.ziFeng = majObjParams.ziFeng % 4 + 1"
+        style="cursor:pointer;user-select:none;">
+        {{ {1:'东',2:'南',3:'西',4:'北'}[majObjParams.ziFeng] }}
+      </button>家，
+      <!-- {{majObjParams.ziFeng}} -->
+      <!-- 场风  -->
+      
+      现在是<button
+        @click="majObjParams.changFeng = majObjParams.changFeng % 4 + 1"
+        style="cursor:pointer;user-select:none;">
+        {{ {1:'东',2:'南',3:'西',4:'北'}[majObjParams.changFeng] }}
+      </button>风场
+      <!-- {{majObjParams.changFeng}} -->
+    </div>
     <br>
-    <!-- <p>handArr: {{handArr}} </p> -->
-    <button @click="calculateTing()">计算听口与役种</button>
     <div id="result">
-      <h2>结果</h2>
+      <!-- <p>handArr: {{handArr}} </p> -->
+      <button @click="calculateTing()">计算听口与役种</button>
       <span id="tingKou" class="hai">
         <template v-for="(count, tile) in tingKou.wait">
           <img :src="getTileImage(tile)" :alt="tile">
           {{count}} 张
-          役种: 
-          <template v-for="yaku in yakuList[tile].yaku">
-            <!-- {{yaku.name}}({{yakuList[tile].fu.fu}}符, {{yaku.fan}}番) -->
-            {{yaku.name}} {{yaku.fan}}番 
-          </template> 
+            <template v-if="yakuList[tile] && yakuList[tile].yaku && yakuList[tile].yaku.length">
+              <template v-for="yaku in yakuList[tile].yaku">
+                {{yaku.name}}
+                <!-- {{yaku.fu}}符 -->
+              </template>
+            </template>
+            <template v-else> 无役 </template>
           <br>
         </template>
       </span>
       </p>
     </div>
-
   </div>
     
 
@@ -178,7 +199,6 @@
         hand: [[],[]], // 手牌数组 hand[0]为手牌，hand[1]为副露区
         // 手牌格式：['4s','4s','2s','3m','4m']
         // 副露区格式 ['111z', '567m' , '99999p']
-          // 其实可以正则。
         handCursor: [0,0], // 手牌光标位置
         handArr: [ // 似乎叫handMat比较合适
           [0, 0, 0, 0, 0, 0, 0, 0, 0], //萬子
@@ -194,7 +214,12 @@
           ['1p', '2p', '3p', '4p', '5p', '6p', '7p', '8p', '9p'],
           ['1s', '2s', '3s', '4s', '5s', '6s', '7s', '8s', '9s'],
           ['1z', '2z', '3z', '4z', '5z', '6z', '7z']
-        ]
+        ],
+        majObjParams: {
+          dora: [JapaneseMaj.getPai("Wanzi",1)],
+          changFeng: 1, // Number类型，东风场为1，南风场为2，西风场为3，北风场为4
+        	ziFeng: 1,    // Number类型，自风，东1南2西3北4
+        }
       };
     },
     methods: {
@@ -240,6 +265,9 @@
         }
         console.log('副露区拼接'); // 输出副露区
         console.log(this.fulu); // 输出副露区字符串
+        
+        let maj = new JapaneseMaj(this.majObjParams); // 根据目前参数创建麻将对象
+        
         // 并遍历所有听口，计算役种
         this.yakuList = {}; // 清空役种列表
         for (const tile in this.tingKou.wait) {
@@ -313,7 +341,7 @@
       },
       deleteTile() {
         this.hand[this.handCursor[0]].splice(this.handCursor[1], 1); // 从手牌中删除
-        // if (this.handCursor[1] >= 1) this.handCursor[1]--; // 光标向左移动
+        if (this.handCursor[1] >= 1) this.handCursor[1]--; // 光标向左移动
         console.log(`删除牌: ${this.handCursor}，当前手牌: ${this.hand}`);
       }
     }
