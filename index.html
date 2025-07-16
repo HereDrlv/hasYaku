@@ -68,7 +68,7 @@
 
 </script>
 <script>
-  //handString to haiArr
+  // handString to haiArr
   /*
     INPUT: hai = [
       [3, 3, 3, 0, 0, 0, 0, 0, 0],
@@ -82,13 +82,9 @@
 </script>
 
 <body>
-  <!-- <h1>输入手牌</h1> -->
-  <!-- <textarea id="handInput" rows="4" cols="50" placeholder="请输入手牌字符串，例如：123456789m123456789p123456789s"></textarea> -->
-
-  
   <div id="app">
     <!-- 手牌+副露区展示 -->
-    <div id="handDisplay" class="hai">
+    <div id="handDisplay">
       <!-- 手牌 -->
       <div 
         :style="{ backgroundColor: handCursor[0] === 0 ? '#e0e0e0' : 'transparent' }"
@@ -96,11 +92,11 @@
         <h2 @click="handCursor = [0,0]">手牌</h2>
         <template v-for="(tile, index) in hand[0]">
           <img 
-            class="tile"
-            :src="getTileImage(tile)" 
-            :alt="tile" 
-            @click="handCursor = [0, index]" 
-            :style="{ border: handCursor[0] === 0 && handCursor[1] === index ? '2px solid grey' : 'none' }"
+          class="tile"
+          :src="getTileImage(tile)" 
+          :alt="tile" 
+          @click="handCursor = [0, index]" 
+          :style="{ border: handCursor[0] === 0 && handCursor[1] === index ? '2px solid grey' : 'none' }"
           >
         </template>
         <br>  
@@ -121,7 +117,6 @@
           >
         </template>
       </div>
-      <hr>
       <div>
         <button @click="deleteTile(hand)"> ⬅️删除 </button>
         <button @click="clearHand" >清空</button>
@@ -132,7 +127,7 @@
     </div>
     
     <!-- 麻将输入键盘 -->
-    <div id="keyboard" class="hai">
+    <div id="tileKeyboard">
       <template v-for="(tiles, typeIndex) in ALL_TILES">
         <div>
           <img 
@@ -147,7 +142,7 @@
 
     <!-- 自风场风设置 -->
     <!-- 自风东起为0，每加一次就顺时针转90度  -->
-    <div style="font-size: 1.5rem;">
+    <div style="font-size: 2rem;">
       我坐<strong
         @click="majObjParams.ziFeng = majObjParams.ziFeng % 4 + 1"
         style="cursor:pointer;user-select:none; text-decoration: underline;">
@@ -167,10 +162,10 @@
     <div id="result">
       <!-- <p>handArr: {{handArr}} </p> -->
       <button @click="calculateTing()">计算听口与役种</button>
-      <span id="tingKou" class="hai">
+      <span id="tingKou">
         <template v-for="(count, tile) in tingKou.wait">
           <div style="margin: 2em;">
-            <img :src="getTileImage(tile)" :alt="tile" >
+            <img class="tile" :src="getTileImage(tile)" :alt="tile" >
             {{count}} 张 <br>
             <template v-if="yakuList[tile] && yakuList[tile].yaku && yakuList[tile].yaku.length">
               <template v-for="yaku in yakuList[tile].yaku">
@@ -186,16 +181,7 @@
       </p>
     </div>
   </div>
-    
 
-  <style>
-    .hai img{
-      width: 3em;
-      margin: 0.2em;
-      background-image: "./img/Front.png";
-      background-color: #f0f0f0;
-    }
-  </style>
   <link rel="stylesheet" href="./style.css">
 
 <script>
@@ -244,7 +230,6 @@
           console.error('计算错误:', error);
           alert('手牌格式错误，请检查输入');
         }
-        // 到这里都是对的
         
         // 将副露区的牌转换成字符串
         this.fulu = '';
@@ -269,7 +254,6 @@
             this.fulu += ' '; // 添加分隔符
           }
         }
-        console.log('副露区拼接'); // 输出副露区
         console.log(this.fulu); // 输出副露区字符串
         
         let maj = new JapaneseMaj(this.majObjParams); // 根据目前参数创建麻将对象
@@ -283,8 +267,7 @@
           // 你反正随便输，我处理。出问题了我只拦截，我不教你怎么输入。
           // hand[1]: [ "6z", "6z", "6z", "6z", "7z", "7z", "7z", "7z", "4z", "4z", "4z", "4z", "2z", "2z", "2z", "2z" ] 
           const finalHand = this.hand[0].join("") + tile + " " + this.fulu;
-          console.log(finalHand); // 输出完整手牌
-          // 这里可能拼不对，少了的话圣心语法会报错
+          // console.log(finalHand); // 输出完整手牌
           const pai = JapaneseMaj.getPaixingFromString(finalHand); // 完整14张手牌 手牌 + 听口 + 副露区
           console.log(pai);
           const res = maj.getYakuCalculator(pai);
@@ -342,8 +325,6 @@
 
         if (this.isHandFull()) return;  // 如果已满13张,光标不移动
         else this.handCursor[1]++; // 光标向右移动
-        // console.log(`添加牌: ${tile} 到手牌`);
-        // console.log(`当前手牌: ${this.hand}`);
       },
       deleteTile() {
         this.hand[this.handCursor[0]].splice(this.handCursor[1], 1); // 从手牌中删除
