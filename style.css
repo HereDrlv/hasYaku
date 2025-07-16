@@ -12,10 +12,8 @@ body {
 #app {
   max-width: 900px;
   width: 98vw;
-  min-width: 0;
   margin: 2em auto;
   padding: 1em;
-  background: #fff;
   border-radius: 12px;
   box-sizing: border-box;
   min-height: 100vh;
@@ -34,16 +32,27 @@ body {
   box-sizing: border-box;
 }
 #handDisplay {
-  flex-direction: column !important;
-  align-items: center;
-}
-#handDisplay > div {
-  width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  flex-wrap: nowrap;
+}
+#hand0Display, #hand1Display {
+  display: flex;
+  flex-direction: row;  /* 横向 */
+  align-items: center;
+  min-height: 4rem;
+  min-width: 100%;
+  box-sizing: border-box;
+}
+#handDisplay h2 {
+  display: block;
+  width: 100%;
+  text-align: center;
   margin-bottom: 0.5em;
+}
+#handDisplay .tile {
+  width: 3.5rem;
 }
 .tile{
   width: 4rem;
@@ -54,6 +63,9 @@ body {
   display: inline-block;
   background-color: #f5f0eb;
   border-radius: 15%;
+}
+#result {
+  flex-direction: column;
 }
 button {
   margin: 0.5em 0.5em 0.5em 0;

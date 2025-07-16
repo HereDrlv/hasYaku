@@ -86,10 +86,10 @@
     <!-- 手牌+副露区展示 -->
     <div id="handDisplay">
       <!-- 手牌 -->
-      <div 
+      <h2 @click="handCursor = [0,0]">手牌</h2>
+      <div id="hand0Display" 
         :style="{ backgroundColor: handCursor[0] === 0 ? '#e0e0e0' : 'transparent' }"
       >
-        <h2 @click="handCursor = [0,0]">手牌</h2>
         <template v-for="(tile, index) in hand[0]">
           <img 
           class="tile"
@@ -101,12 +101,11 @@
         </template>
         <br>  
       </div>
-      <!-- 加入光标显示。逻辑是，如果为空，放一张空牌；如果有，加border吧 -->
       <!-- 副露 -->
-      <div
+      <h2 @click="handCursor = [1,0]">副露</h2>
+      <div id="hand1Display"
         :style="{ backgroundColor: handCursor[0] === 1 ? '#e0e0e0' : 'transparent' }"
       >
-        <h2 @click="handCursor = [1,0]">副露</h2>
         <template v-for="(tile, index) in hand[1]">
           <img
             class="tile"
@@ -162,22 +161,20 @@
     <div id="result">
       <!-- <p>handArr: {{handArr}} </p> -->
       <button @click="calculateTing()">计算听口与役种</button>
-      <span id="tingKou">
-        <template v-for="(count, tile) in tingKou.wait">
-          <div style="margin: 2em;">
-            <img class="tile" :src="getTileImage(tile)" :alt="tile" >
-            {{count}} 张 <br>
-            <template v-if="yakuList[tile] && yakuList[tile].yaku && yakuList[tile].yaku.length">
-              <template v-for="yaku in yakuList[tile].yaku">
-                {{yaku.name}} <br>
-                <!-- {{yaku.fu}}符 -->
-              </template>
+      <template v-for="(count, tile) in tingKou.wait">
+        <div style="margin: 2em;">
+          <img class="tile" :src="getTileImage(tile)" :alt="tile" >
+          {{count}} 张 <br>
+          <template v-if="yakuList[tile] && yakuList[tile].yaku && yakuList[tile].yaku.length">
+            <template v-for="yaku in yakuList[tile].yaku">
+              {{yaku.name}} <br>
+              <!-- {{yaku.fu}}符 -->
             </template>
-            <template v-else> 无役 </template>
-            <br>
-          </div>
-        </template>
-      </span>
+          </template>
+          <template v-else> 无役 </template>
+          <br>
+        </div>
+      </template>
       </p>
     </div>
   </div>
