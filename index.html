@@ -95,6 +95,7 @@
         <h2 @click="handCursor = [0,0]">手牌</h2>
         <template v-for="(tile, index) in hand[0]">
           <img 
+            class="tile"
             :src="getTileImage(tile)" 
             :alt="tile" 
             @click="handCursor = [0, index]" 
@@ -111,6 +112,7 @@
         <h2 @click="handCursor = [1,0]">副露</h2>
         <template v-for="(tile, index) in hand[1]">
           <img
+            class="tile"
             :src="getTileImage(tile)"
             :alt="tile"
             @click="handCursor = [1, index]"
@@ -118,7 +120,7 @@
           >
         </template>
       </div>
-
+      <hr>
       <button @click="deleteTile(hand)"> ⬅️删除 </button>
       <button @click="clearHand" >清空</button>
       <!-- hand: {{hand}}
