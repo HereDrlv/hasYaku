@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>有役吗</title>
+  <meta name="viewport" content="user-scalable=no">
 </head>
 <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/syanten"></script> <!-- 可能的性能优化点 -->
@@ -146,21 +147,20 @@
 
     <!-- 自风场风设置 -->
     <!-- 自风东起为0，每加一次就顺时针转90度  -->
-    <div>
-      
-      我坐<button
+    <div style="font-size: 1.5rem;">
+      我坐<strong
         @click="majObjParams.ziFeng = majObjParams.ziFeng % 4 + 1"
-        style="cursor:pointer;user-select:none;">
-        {{ {1:'东',2:'南',3:'西',4:'北'}[majObjParams.ziFeng] }}
-      </button>家，
+        style="cursor:pointer;user-select:none; text-decoration: underline;">
+         {{ {1:'东',2:'南',3:'西',4:'北'}[majObjParams.ziFeng] }} 
+      </strong>家，
       <!-- {{majObjParams.ziFeng}} -->
       <!-- 场风  -->
       
-      现在是<button
+      现在是<strong
         @click="majObjParams.changFeng = majObjParams.changFeng % 4 + 1"
-        style="cursor:pointer;user-select:none;">
+        style="cursor:pointer;user-select:none; text-decoration: underline;">
         {{ {1:'东',2:'南',3:'西',4:'北'}[majObjParams.changFeng] }}
-      </button>风场
+      </strong>风场
       <!-- {{majObjParams.changFeng}} -->
     </div>
     <br>
@@ -169,16 +169,18 @@
       <button @click="calculateTing()">计算听口与役种</button>
       <span id="tingKou" class="hai">
         <template v-for="(count, tile) in tingKou.wait">
-          <img :src="getTileImage(tile)" :alt="tile">
-          {{count}} 张
+          <div style="margin: 2em;">
+            <img :src="getTileImage(tile)" :alt="tile" >
+            {{count}} 张 <br>
             <template v-if="yakuList[tile] && yakuList[tile].yaku && yakuList[tile].yaku.length">
               <template v-for="yaku in yakuList[tile].yaku">
-                {{yaku.name}}
+                {{yaku.name}} <br>
                 <!-- {{yaku.fu}}符 -->
               </template>
             </template>
             <template v-else> 无役 </template>
-          <br>
+            <br>
+          </div>
         </template>
       </span>
       </p>
